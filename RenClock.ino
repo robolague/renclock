@@ -77,8 +77,8 @@ void loop () {
 //  }
 
 //Nightime 
-  if (override == false && (now.hour() == 19 && now.minute() == 30) || (now.hour() >= 20) || (now.hour() <=7) && now.minute() < 30) {
-    // hour is 7:30pm OR it's past 8:00pm OR it's before 7:30am
+  if (override == false && ((now.hour() >= 20) || (now.hour() <=7) && now.minute() < 30)) {
+    // It's past 8:00pm OR it's before 7:30am
     Serial.print("It's past 7:30pm but before 7:30am");
     fill_solid(leds, NUM_LEDS, CRGB::Red);
     FastLED.setBrightness(50);
@@ -86,7 +86,7 @@ void loop () {
   }
 
 //Morning
-  if (override == false && (now.hour() == 7 && now.minute() == 30) || (now.hour() >= 8 && now.hour() < 13)) {
+  if (override == false && ((now.hour() == 7 && now.minute() == 30) || (now.hour() >= 8 && now.hour() < 13))) {
     // hour is 7:30am OR (it's past 8am AND it's before 1pm)
     Serial.print("It's past 7:30am and before 1pm");
     fill_solid(leds, NUM_LEDS, CRGB::Green);
@@ -95,27 +95,26 @@ void loop () {
   }
 
   //Naptime
-  if (override == false && (now.hour() >= 13 && now.hour() < 14) || (now.hour() ==14 && now.minute() <= 30) ) {
+  if (override == false && (now.hour() >= 13 && now.hour() <= 14) ) {
     // hour is 1:00pm or it's 2:00-2:30
-    Serial.print("It's past 1pm or between 2:00pm and 2:30pm");
+    Serial.print("It's past 1pm or between 2:00pm and 3:00pm");
     fill_solid(leds, NUM_LEDS, CRGB::Red);
     FastLED.setBrightness(50);
     FastLED.show();
   }
 
   //Afternoon
-  if (override == false && (now.hour() == 14 && now.minute() == 30) || (now.hour() > 14 && now.hour() < 19)) {
-    // hour is 2:30pm OR (it's past 2pm AND it's before 7pm)
-    Serial.print("It's past 2:30pm and before 7pm");
+  if (override == false && (now.hour() > 14 && now.hour() < 20)) {
+    // (it's between 3pm AND it's before 8pm)
+    Serial.print("It's past 3:00pm and before 8pm");
     fill_solid(leds, NUM_LEDS, CRGB::Green);
     FastLED.setBrightness(50);
     FastLED.show();
   }
 
   
-  //delay(3000); // only update every 3 seconds
-  delay(60000); // only update every 1 minute
-
+  delay(1000); // only update every 1 seconds
+  //delay(60000); // only update every 1 minute
 //just tests that colors are being sent appropriately
 
 //  fill_solid(leds, NUM_LEDS, CRGB::Purple);
@@ -134,6 +133,10 @@ void interruptbutton() {
   if (digitalRead(switchPin) == LOW) {
   // switch is pressed - pullup keeps pin high normally
   delay(100);                     // delay to debounce switch
+  fill_solid(leds, NUM_LEDS, CRGB::Purple);
+  FastLED.setBrightness(50);
+  FastLED.show();
   override = !override;             // toggle running variable
+  delay(1000);
   }
 }
